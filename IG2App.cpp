@@ -4,6 +4,7 @@
 #include <OgreInput.h>
 #include <SDL_keycode.h>
 #include <OgreMeshManager.h>
+#include "Toy.h"
 
 using namespace Ogre;
 
@@ -47,7 +48,7 @@ void IG2App::setup(void)
   mTrayMgr = new OgreBites::TrayManager("TrayGUISystem", mWindow.render);  
   mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
   addInputListener(mTrayMgr);
-
+  
   addInputListener(this);   
   setupScene();
 }
@@ -80,8 +81,8 @@ void IG2App::setupScene(void)
   luz->setType(Ogre::Light::LT_DIRECTIONAL);
   luz->setDiffuseColour(0.75, 0.75, 0.75);
 
-  mLightNode = mSM->getRootSceneNode()->createChildSceneNode("nLuz");
-  //mLightNode = mCamNode->createChildSceneNode("nLuz");
+  //mLightNode = mSM->getRootSceneNode()->createChildSceneNode("nLuz"); //Luz fija al escenario
+  mLightNode = mCamNode->createChildSceneNode("nLuz"); //Luz se mueve con la cámara
   mLightNode->attachObject(luz);
 
   mLightNode->setDirection(Ogre::Vector3(0, 0, -1));  //vec3.normalise();
@@ -104,6 +105,32 @@ void IG2App::setupScene(void)
 
   //------------------------------------------------------------------------
 
+  //Usar metodo generar plano desde el MeshManager y luego pasar a la entidad
+  //malla generada procedimentalmente, no desde un archivo como Sinbad
+  //El metodo no devuelve el grid sino que lo almacena como un recurso
+  //Debemos llamar al nombre de la malla creada al asignarlo a la entidad plano.
+  //CreatePlane(nombre, zona de recursos a almacenarlo, tipo de plano, anchura, altura, segmentosAnchura, segmentosAltura, normales, numeroTexturas, numUtile, numVtile, UpVectorTextura) 
+  MeshManager::getSingleton().createPlane("mPlane1080x800", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Plane(Vector3::UNIT_Y, 0), 1080, 800, 100, 80, true, 1, 1.0, 1.0, Vector3::UNIT_Z);
+
+  // Creamos una entidad donde almacenaremos el plano con la malla dada
+  Ogre::Entity* entPlane = mSM->createEntity("Plano", "mPlane1080x800", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+  //El nodo del Plano
+  Ogre::SceneNode* mPlanoNode = mSM->getRootSceneNode()->createChildSceneNode("nPlano");
+  //mSM->getRootSceneNode()->addChild(mPlanoNode);
+  mPlanoNode->attachObject(entPlane);
+
+  mPlanoNode->setPosition(0, -100, 0);
+  //mPlanoNode->setVisible(true);
+
+  //------------------------------------------------------------------------
+
+  Ogre::SceneNode* snToy = mSM->getRootSceneNode()->createChildSceneNode("toy");
+  Toy* toyObj = new Toy(snToy);
+  //addInputListener(toyObj*);
+
+
+  //------------------------------------------------------------------------
   mCamMgr = new OgreBites::CameraMan(mCamNode);
   addInputListener(mCamMgr);
   mCamMgr->setStyle(OgreBites::CS_ORBIT);  
