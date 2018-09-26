@@ -127,7 +127,8 @@ void IG2App::setupScene(void)
 
   Ogre::SceneNode* snToy = mSM->getRootSceneNode()->createChildSceneNode("toy");
   Toy* toyObj = new Toy(snToy);
-  //addInputListener(toyObj*);
+  snToy->setPosition(-200, 0, -40);
+  addInputListener(toyObj);
 
 
   //------------------------------------------------------------------------

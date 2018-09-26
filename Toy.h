@@ -1,58 +1,28 @@
 #pragma once
 #include <OgreEntity.h>
 #include <OgreInput.h>
+#include <OgreFrameListener.h>
 #include <SDL_keycode.h>
 #include <OgreMeshManager.h>
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
 
-class Toy : public OgreBites::InputListener { 
+class Toy : 
+	public OgreBites::InputListener 
+{ 
 
 public:
 	//Constructora
-	Toy(Ogre::SceneNode* oSN) {
-		ToyNode = oSN;
-		mSM = ToyNode->getCreator();
-		createToy();
-	}
+	Toy(Ogre::SceneNode* oSN);
 
 	//Destructora
 	~Toy() {}
 
 	//Generado
-	void createToy() {
-		//Entidades y sus mallas
-		eCabeza = mSM->createEntity("sphere.mesh");
-		eNariz = mSM->createEntity("sphere.mesh");
-		eCuerpo = mSM->createEntity("sphere.mesh");
-		eOmbligo = mSM->createEntity("sphere.mesh");
+	void createToy();
 
-		//Jerarquia de nodos
-		nCuerpo = ToyNode->createChildSceneNode("cuerpo");
-		nCuello = nCuerpo->createChildSceneNode("cuello"); //Ver si queremos que cabeza se hijo de cuello
-		nCabeza = nCuerpo->createChildSceneNode("cabeza");
-		nNariz = nCabeza->createChildSceneNode("nariz");
-		nOmbligo = nCuerpo->createChildSceneNode("ombligo");
-
-		//Acoplar las entidades a sus nodos correspondientes
-		nCabeza->attachObject(eCabeza);
-		nNariz->attachObject(eNariz);
-		nCuerpo->attachObject(eCuerpo);
-		nOmbligo->attachObject(eOmbligo);
-
-		//Posicion y escala de cada nodo
-		nCuerpo->setScale(40, 40, 40);
-		nCabeza->setScale(20, 20, 20);
-		nNariz->setScale(10, 10, 10);
-		nOmbligo->setScale(10, 10, 10);
-
-		nCuerpo->setPosition(0, 0, 0);
-		nCabeza->setPosition(0, 30, 0);		//Coordenadas relativas al cuerpo
-		nNariz->setPosition(20, 0, 0);		//Desplazar el radio de la cabeza para que resalte
-		nOmbligo->setPosition(40, 0, 0);	//Desplazar el radio de cuerpo para que resalte
-	}
-
-	//virtual bool keyPressed(const Ogrebites::KeyboardEvent& evt){}
+	bool keyPressed(const OgreBites::KeyboardEvent& evt);
+	void frameRendered(const Ogre::FrameEvent& evt);
 
 protected:
 	Ogre::SceneManager* mSM;
@@ -67,5 +37,6 @@ protected:
 	Ogre::SceneNode* nNariz;
 	Ogre::SceneNode* nOmbligo;
 
+	Ogre::Real desplazamiento;
 
 };
