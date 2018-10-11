@@ -1,8 +1,0 @@
-1.- Descargar el Proyecto Ogre3D del campus
-2.- Descargar OgreBites del campus
-3.- Descomprimir ProyectoOgre3D
-4.- Descargar los documentos del repositorio y sustituirlos en el proyecto
-5.- Abrir en VS: Configurar de Debug a Release y de x64 a x86 en la barra de herramientas superior al lado del boton run.
-6.- Tener a mano la documentacion: www.ogre3d.org -> documentation -> API Reference
-7.- Vamos a trabajar sobre IG2App.cpp donde configuraremos la escena y generando nuevas clases
-8.- Si da fallo de recurso, buscar el recurso deseado ("sphere.mesh") en el directorio media y meterlo dentro de la subcarpeta IG2App
