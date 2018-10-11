@@ -28,8 +28,8 @@ protected:
   Ogre::SceneNode* mSinbadNode = nullptr;
   OgreBites::CameraMan* mCamMgr = nullptr;
 
-  OgreBites::CameraMan* reflexCam = nullptr;
-
+  Ogre::Camera* reflexCam = nullptr;
+ 
   Ogre::SceneNode* mPlanoNode = nullptr;
  
 };

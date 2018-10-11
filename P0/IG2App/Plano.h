@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Plano_H__
+#define __Plano_H__
 #include "EntityClass.h"
 
 
@@ -23,3 +24,4 @@ protected:
 	Ogre::SceneNode* nPlano;
 	Ogre::Entity* ePlano;
 };
+#endif

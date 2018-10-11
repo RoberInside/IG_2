@@ -9,7 +9,8 @@
 #include "Plano.h"
 
 #include "OgrePlane.h"
-#include "OgreMovablePlane.h"
+#include <OgreTextureManager.h>
+#include <OgreRenderTexture.h>
 
 
 using namespace Ogre;
@@ -86,13 +87,7 @@ void IG2App::setupScene(void)
   mCamNode->lookAt(Ogre::Vector3(0, 0, 0), Ogre::Node::TS_WORLD);
   //mCamNode->setDirection(Ogre::Vector3(0, 0, -1));  
 
-  //CAMARA REFLEJO
-  Camera* reflexCam = mSM->createCamera("reflexCamera");
-  reflexCam->setNearClipDistance(1);
-  reflexCam->setFarClipDistance(10000);
-  reflexCam->setAutoAspectRatio(true);
-
-  mCamNode->attachObject(reflexCam);
+ 
  
 
 
@@ -150,19 +145,47 @@ void IG2App::setupScene(void)
 
 
   //PLANO DEL REFLEJO
-  MeshManager::getSingleton().createPlane("mReflex1080x800", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-	  MovablePlane(Vector3::UNIT_Y, 0), 1080, 800, 100, 80, true, 1, 1.0, 1.0, Vector3::NEGATIVE_UNIT_Z);
+  
+  //CAMARA REFLEJO
+  Camera* reflexCam = snPlane->getCreator()->createCamera("reflexCamera");
 
+  reflexCam->enableReflection(Ogre::Plane(Ogre::Vector3::UNIT_Y, 0)); // el plano del reflejo 
+  reflexCam->enableCustomNearClipPlane(Plane(Vector3::UNIT_Y, 0));
 
-  /*Ogre::Entity* eReflex = mSM->createEntity("Reflejo", "mReflex1080x800", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-  Ogre::SceneNode* snReflex = mSM->getRootSceneNode()->createChildSceneNode("Reflejo");
-  snReflex->attachObject(eReflex);*/
+  reflexCam->setNearClipDistance(1);
+  reflexCam->setFarClipDistance(10000);
+  reflexCam->setAutoAspectRatio(true);
 
-  //reflexCam->enableReflection(eReflex);
+  mCamNode->attachObject(reflexCam); // se añade al nodo de la camara principal la del reflejo desde el punto de vista del plano,
+  //por eso se usa el creador del nodo del plano para hacer la camara del reflejo
 
-  //Ogre::MovablePlane* reflexPlane = new MovablePlane(Vector3::UNIT_Y, 0);
+  //Textura del plano (reflejo)
+  Ogre::TexturePtr reflexTexturePtr = TextureManager::getSingleton().createManual(
+	  "reflexTexture",
+	  ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+	  TEX_TYPE_2D,
+	  1080,
+	  800,
+	  0, PF_R8G8B8, TU_RENDERTARGET);
 
-  //reflexPlane->
+	//Añadimos un puerto de vista al RenderTarget con la nueva cámara
+	  Ogre::RenderTexture* renderTexture = reflexTexturePtr->getBuffer()->getRenderTarget(); // aqui deberia ser asi segun 
+	  //las transparencias pero no devuelve bien el puntero creado para usarlo y no se el motivo del error de clase 
+	  //incompleta cuando esta todo incluido.
+  Viewport * vpt = renderTexture->addViewport(reflexCam);
+  vpt->setClearEveryFrame(true);
+  vpt->setBackgroundColour(ColourValue::Black);
+
+  //Añadimos la nueva unidad de textura al material del panel
+  TextureUnitState* tU = planeObj->getEntity()->getSubEntities[0]->getMaterial()->
+	  getTechniques[0]->getPasses[0]->
+	  createTextureUnitState("reflexTexture");
+  tU->setColourOperation(LBO_MODULATE); // backgroundColour -> black
+										// LBO_ADD / LBO_ALPHA_BLEND / LBO_REPLACE
+  tU->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
+  tU->setProjectiveTexturing(true, reflexCam);
+
+  
 
   /*
   Ogre::SceneNode* snReflex = mSM->getRootSceneNode()->createChildSceneNode("Reflejo");

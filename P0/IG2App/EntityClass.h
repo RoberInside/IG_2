@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __EntityClass_H__
+#define __EntityClass_H__
+
 #include <OgreEntity.h>
 #include <OgreInput.h>
 #include <OgreFrameListener.h>
@@ -22,3 +24,4 @@ public:
 protected:
 
 };
+#endif

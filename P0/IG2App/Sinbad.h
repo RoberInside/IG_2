@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Sinbad_H__
+#define __Sinbad_H__
 #include "EntityClass.h"
 
 class Sinbad :
@@ -18,3 +19,4 @@ protected:
 	Ogre::SceneNode* nSinbad;
 	Ogre::Entity* eSinbad;
 };
+#endif
