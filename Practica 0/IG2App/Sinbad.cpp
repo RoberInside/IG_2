@@ -22,6 +22,12 @@ Sinbad::Sinbad(Ogre::SceneNode* oSN) {
 	RunTop = eSinbad->getAnimationState("RunTop");
 	RunTop->setLoop(true);
 	RunTop->setEnabled(true);
+	
+	//Mostrar esqueleto
+	//auto skeleton = eSinbad->getMesh()->getSkeleton();
+
+	//Espadas
+	//eSinbad->attachObjectToBone("Hueso", "Objeto");
 }
 
 void Sinbad::createSinbad() {
@@ -32,7 +38,7 @@ void Sinbad::createSinbad() {
 	nSinbad = mSM->getRootSceneNode()->createChildSceneNode("nSinbad");
 	nSinbad->attachObject(eSinbad);
 
-	nSinbad->setPosition(400, 100, -300);
+	nSinbad->setPosition(200, 2, -150);
 	nSinbad->setScale(20, 20, 20);
 	//mSinbadNode->yaw(Ogre::Degree(-45));
 	//mSinbadNode->showBoundingBox(true);

@@ -24,6 +24,8 @@
 
 #include <Ogre.h>
 #include <OgreRoot.h>
+
+#include <iostream>
 /*
 #include <OgreFrameListener>
 #include <OgreWindowEventUtilities>
@@ -142,11 +144,24 @@ void IG2App::setupScene(void)
   Sinbad* sinbadObj = new Sinbad(snSinbadNode);
   addInputListener(sinbadObj);
 
+  //Mostrar animaciones
+  std::cout << "\n==LISTA DE ANIMACIONES DE SINBAD==" << std::endl;
   AnimationStateSet* aux = sinbadObj->getEntity()->getAllAnimationStates();
   auto it = aux->getAnimationStateIterator().begin();
   while (it != aux->getAnimationStateIterator().end()) {
-	  auto s = it->first; ++it;
+	  auto s = it->first; //El iterador en su primera posicion almacena el nombre
+	  ++it;
+	  std::cout << s << std::endl;
   }
+
+  //Mostrar esqueleto
+  std::cout << "\n==LISTA DE HUESOS DE SINBAD==" << std::endl;
+  auto skeleton = sinbadObj->getEntity()->getMesh()->getSkeleton();
+  auto numBones = skeleton->getNumBones();
+  for (int i = 0; i < numBones; i++) {
+	  std::cout << skeleton->getBone(i)->getName() << std::endl;
+  }
+  std::cout << std::endl;
 
 
   //------------------------------------------------------------------------
@@ -203,8 +218,10 @@ void IG2App::setupScene(void)
   //Añadimos la nueva unidad de textura al material del panel
   TextureUnitState* tU = planeObj->getEntity()->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->
 	  createTextureUnitState("reflexTexture");
-  tU->setColourOperation(LBO_MODULATE); // backgroundColour -> black
+  //tU->setColourOperation(LBO_MODULATE); // backgroundColour -> black
 										// LBO_ADD / LBO_ALPHA_BLEND / LBO_REPLACE
+  tU->setColourOperation(LBO_ADD); // backgroundColour -> black
+									  // LBO_ADD / LBO_ALPHA_BLEND / LBO_REPLACE
   tU->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
   tU->setProjectiveTexturing(true, reflexCam);
   
