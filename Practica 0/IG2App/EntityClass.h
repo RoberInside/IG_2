@@ -8,6 +8,8 @@
 #include <OgreSceneNode.h>
 #include <OgreVector2.h>
 #include <OgrePrerequisites.h>
+#include <OgreAnimation.h>
+#include <OgreKeyFrame.h>
 
 class EntityClass :
 	public OgreBites::InputListener

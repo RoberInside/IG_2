@@ -1,7 +1,5 @@
 #pragma once
 #include "EntityClass.h"
-#include <OgreAnimation.h>
-#include <OgreKeyFrame.h>
 
 
 class Bomb :
