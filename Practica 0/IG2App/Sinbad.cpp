@@ -1,8 +1,10 @@
 #include "Sinbad.h"
+#include <iostream>
 
 //Constructora
-Sinbad::Sinbad(Ogre::SceneNode* oSN) {
+Sinbad::Sinbad(Ogre::SceneNode* oSN, Ogre::SceneNode* nBomb) {
 	nSinbad = oSN;
+	nBomba = nBomb;
 	mSM = nSinbad->getCreator();
 	createSinbad();
 
@@ -22,11 +24,12 @@ Sinbad::Sinbad(Ogre::SceneNode* oSN) {
 	RunTop = eSinbad->getAnimationState("RunTop");
 	RunTop->setLoop(true);
 	RunTop->setEnabled(true);
-
+	
 	//Animaciones
 	andar();
-	kabumAnim();
+	//kabumAnim();
 
+	//Anim Inicial
 	Ruta->setEnabled(true);
 }
 
@@ -53,6 +56,7 @@ void Sinbad::createSinbad() {
 }
 
 
+
 bool Sinbad::keyPressed(const OgreBites::KeyboardEvent & evt)
 {
 	switch (evt.keysym.sym) {
@@ -69,74 +73,10 @@ bool Sinbad::keyPressed(const OgreBites::KeyboardEvent & evt)
 	return false;
 }
 
-void Sinbad::kabumAnim() {
-	//RunTop->setEnabled(true);
-	//RunTop->setEnabled(true);
-
-	//KABUUM!!!
-	Ogre::Real duracionBum = 20;
-	Ogre::Animation* animationBum = mSM->createAnimation("animKabum", duracionBum);
-	Ogre::NodeAnimationTrack* trackBum = animationBum->createNodeTrack(0); //incluir modulo animaciones
-	trackBum->setAssociatedNode(nSinbad);
-	Ogre::Vector3 keyframePosBum = nSinbad->getPosition();
-	Ogre::Real longitudPasoBum = duracionBum / 4.2;
-	Ogre::Real tiempoGiroBum = 4 / 4.2;
-	Ogre::TransformKeyFrame* kfBum;
-	int tamDesplazamientoZBum = 600;
-	int tamDesplazamientoYBum = 50;
-	int tamDesplazamientoXBum = 400;
-
-	Ogre::Vector3 srcBum(0, 0, 1);
-	//1 hacia la bomba
-	Ogre::Vector3 destBum(-1, 0, 0);
-	//2 plantado en el suelo
-	Ogre::Vector3 dest2Bum(0, 1, 0);
-
-	Ogre::Quaternion quatBum = srcBum.getRotationTo(destBum);
-	Ogre::Quaternion quat2Bum = srcBum.getRotationTo(dest2Bum);
-
-	//nSinbad->setInitialState();
-
-	//Keyframe 0 Se detiene
-	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 0);
-	kfBum->setTranslate(keyframePosBum);
-
-	//Keyframe 1: Se gira hacia la bomba
-	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 0.2);
-	kfBum->setRotation(quatBum);
-	kfBum->setTranslate(keyframePosBum);
-
-	//Keyframe 3: Anda hacia la bomba
-	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 1);
-	keyframePosBum += Ogre::Vector3::NEGATIVE_UNIT_X * tamDesplazamientoXBum;
-	kfBum->setRotation(quatBum);
-	kfBum->setTranslate(keyframePosBum);
-
-	//Keyframe 4: Se tumba hacia arriba
-	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 1.2);
-	kfBum->setRotation(quat2Bum);
-	keyframePosBum += Ogre::Vector3::NEGATIVE_UNIT_Y * tamDesplazamientoXBum;
-	kfBum->setTranslate(keyframePosBum);
-	//RunTop->setEnabled(false);
-	//RunBase->setEnabled(false);
-
-	//Keyframe 5: Arrastrado por la corriente
-	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 3);
-	keyframePosBum += Ogre::Vector3::UNIT_X * tamDesplazamientoXBum;
-	kfBum->setRotation(quat2Bum);
-	kfBum->setTranslate(keyframePosBum);
-
-	Kabum = mSM->createAnimationState("animKabum");
-	Kabum->setLoop(false);
-	Kabum->setEnabled(false);
-	//animationBum->setInterpolationMode();
-}
-
 void Sinbad::activarBomba() {
 	Ruta->setEnabled(false);
-	//RunBase->setEnabled(false);
-	//RunTop->setEnabled(false);
-	Kabum->setEnabled(true);
+	
+	kabumAnim();
 }
 
 void Sinbad::switchAnimation() {
@@ -160,17 +100,26 @@ void Sinbad::switchAnimation() {
 	if (RunTop->getEnabled()) eSinbad->attachObjectToBone("Handle.R", eSword1);
 }
 
-
 void Sinbad::frameRendered(const Ogre::FrameEvent& evt)
 {
 	if (Dance->getEnabled()) Dance->addTime(evt.timeSinceLastFrame);
 	if (RunBase->getEnabled()) RunBase->addTime(evt.timeSinceLastFrame);
 	if (RunTop->getEnabled()) RunTop->addTime(evt.timeSinceLastFrame);
 	if (Ruta->getEnabled()) Ruta->addTime(evt.timeSinceLastFrame);
-	if (Kabum->getEnabled()) Kabum->addTime(evt.timeSinceLastFrame);
+	if (actBum) if (Kabum->getEnabled()) Kabum->addTime(evt.timeSinceLastFrame);
 }
 
 void Sinbad::andar() {
+
+	//Debug
+	//std::cout << "Activando animacion Andar" << std::endl;
+
+	//Desactivar otras animaciones
+	Dance->setEnabled(false);
+	RunBase->setEnabled(true);
+	RunTop->setEnabled(true);
+	//Kabum->setEnabled(false);
+
 	//Animacion andar dando vueltas
 	//Animacion
 	Ogre::Real duracion = 8;
@@ -254,4 +203,101 @@ void Sinbad::andar() {
 	Ruta->setLoop(true);
 	Ruta->setEnabled(true);
 	//animation->setInterpolationMode();
+}
+
+void Sinbad::kabumAnim() {
+	//Debug
+	//std::cout << "Activando animacion Kabum" << std::endl;
+
+	//Desactivar otras animaciones
+	//Dance->setEnabled(false);
+	//RunBase->setEnabled(true);
+	//RunTop->setEnabled(true);
+	//Ruta->setEnabled(false);
+	//Kabum->setEnabled(true);
+
+	//////////////////////////
+	//	VARIABLES
+	/////////////////////////
+
+	//Basicas
+	Ogre::Real duracionBum = 10;
+	Ogre::Animation* animationBum = mSM->createAnimation("animKabum", duracionBum);
+	Ogre::NodeAnimationTrack* trackBum = animationBum->createNodeTrack(0); //incluir modulo animaciones
+	
+	//nSinbad->setPosition(); //¿Actualizar la posicion?
+
+	trackBum->setAssociatedNode(nSinbad);	//Esto es lo que nos desplaza al Sinbad
+	actBum = true;
+	Ogre::Vector3 keyframePosBum;
+	Ogre::Real longitudPasoBum = duracionBum / 4.2;
+	Ogre::Real tiempoGiroBum = 4 / 4.2;
+	Ogre::TransformKeyFrame* kfBum;
+	int tamDesplazamientoYBum = 80;
+	int tamDesplazamientoXBum = 400;
+
+	//GIROS
+	//Vector origen
+	Ogre::Vector3 srcBum(0, 0, 1);
+	//Ogre::Vector3 srcBum = nSinbad->getPosition();
+	//Giro 1 hacia la bomba
+	Ogre::Vector3 posBomba = nBomba->getPosition();
+	//Giro 2 plantado en el suelo
+	Ogre::Vector3 dest2Bum(0, 1, 0);
+	//Generando Quaterniones
+	Ogre::Quaternion quat2Bum = srcBum.getRotationTo(dest2Bum);
+
+	////////////////////////
+	//KEYFRAMES
+	///////////////////////
+	//Keyframe 0 Se detiene
+	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 0);
+	keyframePosBum = nSinbad->getPosition();
+	kfBum->setTranslate(keyframePosBum);
+
+	//Keyframe 1: Se gira hacia la bomba
+	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 0.5);
+	keyframePosBum = nSinbad->getPosition();
+	//rotacion
+	Ogre::Vector3 destBum = { posBomba.x - keyframePosBum.x, 0 , posBomba.z - keyframePosBum.z };
+	//Ogre::Vector3 destBum = { posBomba.x - nSinbad->getPosition().x, 0, posBomba.z - nSinbad->getPosition().z };
+	Ogre::Quaternion quatBum = srcBum.getRotationTo(destBum);
+	quatBum.normalise();
+	kfBum->setRotation(quatBum);
+	//traslacion
+	kfBum->setTranslate(keyframePosBum);
+
+	//Keyframe 3: Anda hacia la bomba
+	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 1.2);
+	//keyframePosBum += Ogre::Vector3::NEGATIVE_UNIT_X * tamDesplazamientoXBum;
+	keyframePosBum += destBum;
+	kfBum->setRotation(quatBum);
+	kfBum->setTranslate(keyframePosBum);
+
+	//Keyframe 4: Se tumba hacia arriba
+	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 1.8);
+	kfBum->setRotation(quat2Bum);
+	keyframePosBum += Ogre::Vector3::NEGATIVE_UNIT_Y * tamDesplazamientoYBum;
+	kfBum->setTranslate(keyframePosBum);
+	//RunTop->setEnabled(false);
+	//RunBase->setEnabled(false);
+
+	//Keyframe 5: Arrastrado por la corriente
+	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 3.0);
+	keyframePosBum += Ogre::Vector3::UNIT_X * tamDesplazamientoXBum;
+	kfBum->setRotation(quat2Bum);
+	kfBum->setTranslate(keyframePosBum);
+
+	//Keyframe 6: Tirado fuera del rio
+	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 4.2);
+	kfBum->setTranslate(keyframePosBum);
+	kfBum->setRotation(quat2Bum);
+
+	///////////////////////
+	// Parametros finales
+	////////////////////////
+	Kabum = mSM->createAnimationState("animKabum");
+	Kabum->setLoop(false);
+	Kabum->setEnabled(true);
+	//animationBum->setInterpolationMode();
 }

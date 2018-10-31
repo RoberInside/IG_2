@@ -7,7 +7,7 @@ class Sinbad :
 {
 public:
 	//Constructora
-	Sinbad(Ogre::SceneNode* oSN);
+	Sinbad(Ogre::SceneNode* oSN, Ogre::SceneNode* nBomb);
 
 	//Destructora
 	~Sinbad() {};
@@ -25,9 +25,13 @@ public:
 	void activarBomba();
 
 protected:
+	bool actBum = false;
+
 	Ogre::SceneManager* mSM; //scene Manager
 	Ogre::SceneNode* nSinbad; //nodo Sinbad
 	Ogre::Entity* eSinbad;	  //entidad Simbad
+
+	Ogre::SceneNode* nBomba; //Nodo bomba
 
 	Ogre::Entity* eSword1;
 	Ogre::Entity* eSword2;
@@ -38,4 +42,5 @@ protected:
 	Ogre::AnimationState* RunTop;
 	Ogre::AnimationState* Ruta;
 	Ogre::AnimationState* Kabum;
+
 };

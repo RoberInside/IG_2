@@ -137,11 +137,16 @@ void IG2App::setupScene(void)
   //lightNode->setPosition(0, 0, 1000);
  
   //------------------------------------------------------------------------
+   //Bomba
+  Ogre::SceneNode* snBomb = mSM->getRootSceneNode()->createChildSceneNode("bomb");
+  Bomb* bombObj = new Bomb(snBomb);
+  addInputListener(bombObj); //NECESARIO PARA QUE SE VEA LA ANIMACION
 
+  //------------------------------------------------------------------------
   // SINBAD
 
   Ogre::SceneNode* snSinbadNode = mSM->getRootSceneNode()->createChildSceneNode("Sinbad");
-  Sinbad* sinbadObj = new Sinbad(snSinbadNode);
+  Sinbad* sinbadObj = new Sinbad(snSinbadNode, snBomb);
   addInputListener(sinbadObj);
 
   //Mostrar animaciones
@@ -235,11 +240,7 @@ void IG2App::setupScene(void)
   addInputListener(toyObj);
 
   //------------------------------------------------------------------------
-  //Bomba
-  Ogre::SceneNode* snBomb = mSM->getRootSceneNode()->createChildSceneNode("bomb");
-  Bomb* bombObj = new Bomb(snBomb);
-  addInputListener(bombObj); //NECESARIO PARA QUE SE VEA LA ANIMACION
-  //------------------------------------------------------------------------
+ 
   mCamMgr = new OgreBites::CameraMan(mCamNode);
   addInputListener(mCamMgr);
   mCamMgr->setStyle(OgreBites::CS_ORBIT);  
