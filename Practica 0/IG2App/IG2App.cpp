@@ -239,7 +239,6 @@ void IG2App::setupScene(void)
   Ogre::SceneNode* snBomb = mSM->getRootSceneNode()->createChildSceneNode("bomb");
   Bomb* bombObj = new Bomb(snBomb);
   addInputListener(bombObj); //NECESARIO PARA QUE SE VEA LA ANIMACION
-
   //------------------------------------------------------------------------
   mCamMgr = new OgreBites::CameraMan(mCamNode);
   addInputListener(mCamMgr);

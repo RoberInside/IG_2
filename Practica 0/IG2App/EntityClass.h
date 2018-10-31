@@ -10,6 +10,9 @@
 #include <OgrePrerequisites.h>
 #include <OgreAnimation.h>
 #include <OgreKeyFrame.h>
+#include <OgreParticleSystem.h>
+#include <OgreBillboardSet.h>
+#include <OgreBillboard.h>
 
 class EntityClass :
 	public OgreBites::InputListener

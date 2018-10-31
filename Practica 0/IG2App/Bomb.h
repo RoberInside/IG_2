@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BOMB_H_
+#define BOMB_H_
+
 #include "EntityClass.h"
 
 
@@ -13,8 +15,11 @@ public:
 	Ogre::Entity* getEntity() { return eBomb; }
 	Ogre::SceneNode* getNode() { return nBomb; }
 	void frameRendered(const Ogre::FrameEvent& evt);
+	void smokeParticle();
+
 	//void rotateX(float angulo);
 	//void setPosition(int x, int y, int z);
+	
 
 protected:
 	Ogre::SceneManager* mSM; //Scene Manager
@@ -23,5 +28,10 @@ protected:
 
 	//Animacion
 	Ogre::AnimationState* animationState;
+
+	//Sistema de particulas
+	Ogre::Billboard* bb;
+	Ogre::ParticleSystem* pSys;
 };
+#endif // !BOMB_H_
 
