@@ -48,8 +48,8 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 		//	//direccion
 		//	break;
 
-		case SDLK_r:
-			//sinbadObj
+		case SDLK_c:
+			mCamNode->lookAt(snSinbadNode->getPosition(), Ogre::Node::TS_LOCAL); // esto no funciona, pero se deberia poder hacer de este estilo.
 			break;
 	}
   /*
@@ -105,11 +105,16 @@ void IG2App::setupScene(void)
   cam->setAutoAspectRatio(true);
   //cam->setPolygonMode(Ogre::PM_WIREFRAME); 
 
+
   mCamNode = mSM->getRootSceneNode()->createChildSceneNode("nCam");
   mCamNode->attachObject(cam);
 
   mCamNode->setPosition(0, 0, 1000);
   mCamNode->lookAt(Ogre::Vector3(0, 0, 0), Ogre::Node::TS_WORLD);
+  
+  //mCamMgr->setStyle(OgreBites::CameraStyle::CS_ORBIT); //PARA QUE LA CAMARA ORBITE ALREDEDOR DE UN NODO SE HACE A TRAVES DEL MANAGER DEL CAMERAMAN, 
+  //PERO ESTA SIN REFERENCIAR EN NINGUN SITIO, PERO DISPONE DE LOS METODOS PARA ELLO.
+
   //mCamNode->setDirection(Ogre::Vector3(0, 0, -1));  
 
 
@@ -152,7 +157,7 @@ void IG2App::setupScene(void)
   //------------------------------------------------------------------------
   // SINBAD
 
-  Ogre::SceneNode* snSinbadNode = mSM->getRootSceneNode()->createChildSceneNode("Sinbad");
+  snSinbadNode = mSM->getRootSceneNode()->createChildSceneNode("Sinbad");
   sinbadObj = new Sinbad(snSinbadNode, bombObj, snToy);
   addInputListener(sinbadObj);
 

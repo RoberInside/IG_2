@@ -32,6 +32,7 @@ protected:
   OgreBites::CameraMan* reflexCam = nullptr;
   Ogre::SceneNode* mPlanoNode = nullptr;
   Sinbad* sinbadObj;
+  Ogre::SceneNode* snSinbadNode = nullptr;
 
 };
 
