@@ -6,7 +6,6 @@
 #include <OgrePrerequisites.h>
 #include <OgreMeshManager.h>
 #include "Toy.h"
-#include "Sinbad.h"
 #include "Plano.h"
 #include "Bomb.h"
 //Includes para evitar error "pointer to incomplete class type not allowed"
@@ -43,11 +42,11 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 		case SDLK_ESCAPE:
 			getRoot()->queueEndRendering();
 			break;
-		case SDLK_p:
-			mPlanoNode->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(0.05), Ogre::Node::TS_LOCAL);
-			//ToyNode->rotate(Ogre::Quaternion(Ogre::Vector3(0,0,0), Ogre::Vector3(0,0,0), Ogre::Vector3(0, 0, 0)), Ogre::Node::TS_LOCAL);
-			//direccion
-			break;
+		//case SDLK_p:
+		//	mPlanoNode->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(0.05), Ogre::Node::TS_LOCAL);
+		//	//ToyNode->rotate(Ogre::Quaternion(Ogre::Vector3(0,0,0), Ogre::Vector3(0,0,0), Ogre::Vector3(0, 0, 0)), Ogre::Node::TS_LOCAL);
+		//	//direccion
+		//	break;
 
 		case SDLK_r:
 			//sinbadObj
@@ -137,6 +136,14 @@ void IG2App::setupScene(void)
   //lightNode->setPosition(0, 0, 1000);
  
   //------------------------------------------------------------------------
+  //TOY
+
+  Ogre::SceneNode* snToy = mSM->getRootSceneNode()->createChildSceneNode("toy");
+  Toy* toyObj = new Toy(snToy);
+  snToy->setPosition(-200, -60, -40);
+  addInputListener(toyObj);
+
+  //------------------------------------------------------------------------
    //Bomba
   Ogre::SceneNode* snBomb = mSM->getRootSceneNode()->createChildSceneNode("bomb");
   Bomb* bombObj = new Bomb(snBomb);
@@ -146,7 +153,7 @@ void IG2App::setupScene(void)
   // SINBAD
 
   Ogre::SceneNode* snSinbadNode = mSM->getRootSceneNode()->createChildSceneNode("Sinbad");
-  Sinbad* sinbadObj = new Sinbad(snSinbadNode, snBomb);
+  sinbadObj = new Sinbad(snSinbadNode, bombObj, snToy);
   addInputListener(sinbadObj);
 
   //Mostrar animaciones
@@ -183,7 +190,9 @@ void IG2App::setupScene(void)
   Ogre::SceneNode* snPlane = mSM->getRootSceneNode()->createChildSceneNode("Plano");
   Plano* planeObj = new Plano(snPlane, "plano");
   planeObj->getEntity()->setMaterialName("Reflex");
+  addInputListener(planeObj);
   //planeObj->getEntity()->setMaterialName("IG2App/plano");
+
 
   //Camara reflejo
   Camera* reflexCam = mSM->createCamera("reflexCamera");
@@ -229,15 +238,7 @@ void IG2App::setupScene(void)
 									  // LBO_ADD / LBO_ALPHA_BLEND / LBO_REPLACE
   tU->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
   tU->setProjectiveTexturing(true, reflexCam);
-  
-
-  //------------------------------------------------------------------------
-  //TOY
-
-  Ogre::SceneNode* snToy = mSM->getRootSceneNode()->createChildSceneNode("toy");
-  Toy* toyObj = new Toy(snToy);
-  snToy->setPosition(-200, -60, -40);
-  addInputListener(toyObj);
+    
 
   //------------------------------------------------------------------------
  

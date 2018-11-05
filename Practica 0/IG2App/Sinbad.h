@@ -1,13 +1,13 @@
 #pragma once
 #include "EntityClass.h"
-
+#include "Bomb.h"
 
 class Sinbad :
 	public EntityClass
 {
 public:
 	//Constructora
-	Sinbad(Ogre::SceneNode* oSN, Ogre::SceneNode* nBomb);
+	Sinbad(Ogre::SceneNode* oSN, Bomb* bObj, Ogre::SceneNode* nToy);
 
 	//Destructora
 	~Sinbad() {};
@@ -23,13 +23,17 @@ public:
 	void andar();
 	void kabumAnim();
 	void activarBomba();
+	//void Muere(); //estaria bien separar las animaciones de "muerte" y de movimiento hacia la bomba
 
 protected:
 	bool actBum = false;
+	bool muerto = false;
 
 	Ogre::SceneManager* mSM; //scene Manager
 	Ogre::SceneNode* nSinbad; //nodo Sinbad
-	Ogre::Entity* eSinbad;	  //entidad Simbad
+	Ogre::SceneNode* snToy;		// nodo
+	Ogre::Entity* eSinbad;	  //entidad Sinbad
+	Bomb* bomb;				 //esto para activar el sistema de particulas desde la animacion
 
 	Ogre::SceneNode* nBomba; //Nodo bomba
 
@@ -42,5 +46,6 @@ protected:
 	Ogre::AnimationState* RunTop;
 	Ogre::AnimationState* Ruta;
 	Ogre::AnimationState* Kabum;
+	Ogre::AnimationState* Corriente;
 
 };

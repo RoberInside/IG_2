@@ -2,7 +2,7 @@
 
 
 //Constructora
-Plano::Plano(Ogre::SceneNode* oSN, std::string name){
+Plano::Plano(Ogre::SceneNode* oSN, std::string name): rotacion(0.0){
 	nPlano = oSN;
 	mSM = nPlano->getCreator();
 	nombre = name;
@@ -27,6 +27,18 @@ void Plano::setPosition(int x, int y, int z) {
 
 }
 
-void Plano::rotateX(float x) {
-	nPlano->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(x));
+bool Plano::keyPressed(const OgreBites::KeyboardEvent & evt)
+{
+	switch (evt.keysym.sym) {
+
+	case SDLK_p:
+		nPlano->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(rotacion));
+		break;
+	}
+	return true;
+}
+
+void Plano::frameRendered(const Ogre::FrameEvent & evt)
+{
+	rotacion = 5 * evt.timeSinceLastFrame;
 }

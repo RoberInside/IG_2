@@ -7,6 +7,9 @@ Toy::Toy(Ogre::SceneNode* oSN):
 	ToyNode = oSN;
 	mSM = ToyNode->getCreator();
 	createToy();
+	
+
+
 }
 
 
@@ -48,12 +51,16 @@ bool Toy::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
 
 	switch (evt.keysym.sym){
-		case SDLK_t:
+		case SDLK_y:
 			ToyNode->translate(Ogre::Vector3(0, 0, desplazamiento), Ogre::Node::TS_LOCAL);
 			nCuerpo->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(0.05));
 			break;
 		case SDLK_v:
 			ToyNode->rotate(Ogre::Vector3(0,1,0), Ogre::Radian(45));
+			break;
+		case SDLK_t:
+			ToyNode->translate(Ogre::Vector3(0, 0, -desplazamiento), Ogre::Node::TS_LOCAL);
+			nCuerpo->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(-0.05));
 			break;
 	}
 	return true;

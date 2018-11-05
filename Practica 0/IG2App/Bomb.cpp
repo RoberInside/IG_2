@@ -1,11 +1,12 @@
 #include "Bomb.h"
 
 Bomb::Bomb(Ogre::SceneNode* oSN)
+	
 {
 	nBomb = oSN;
 	mSM = nBomb->getCreator();
 	createBomb();
-	smokeParticle();
+
 }
 
 
@@ -15,7 +16,7 @@ Bomb::~Bomb()
 
 void Bomb::createBomb() {
 	//ENTIDAD
-	eBomb = mSM->createEntity("uv_sphere.mesh");
+	eBomb = mSM->createEntity("eBomb", "uv_sphere.mesh");
 	
 	//Material
 	eBomb->setMaterialName("IG2App/Bomb");
@@ -87,7 +88,8 @@ void Bomb::smokeParticle()
 		Ogre::FloatRect(0.0, 0.0 ,0.5, 0.5), // “A”
 		Ogre::FloatRect(0.5, 0.0 ,1.0, 0.5), // “B”
 		Ogre::FloatRect(0.0, 0.5 ,0.5, 1.0), // “C”
-		Ogre::FloatRect(0.5, 0.5 ,1.0, 1.0), // “D”
+		Ogre::FloatRect(0.5, 0.5 ,1.0, 1.0), // “D”
+
 	};
 
 	bbSet->setTextureCoords(texCoordArray, 4);

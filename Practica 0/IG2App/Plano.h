@@ -15,12 +15,17 @@ public:
 	void createPlano();
 	Ogre::Entity* getEntity() { return ePlano; }
 	Ogre::SceneNode* getNode() { return nPlano; }
-	void rotateX(float angulo);
+
+	
 	void setPosition(int x, int y, int z);
+
+	bool keyPressed(const OgreBites::KeyboardEvent& evt);
+	void frameRendered(const Ogre::FrameEvent& evt);
 
 protected:
 	std::string nombre;
 	Ogre::SceneManager* mSM;
 	Ogre::SceneNode* nPlano;
 	Ogre::Entity* ePlano;
+	float rotacion;
 };

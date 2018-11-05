@@ -6,6 +6,7 @@
 #include <OgreSceneNode.h>
 #include <OgreTrays.h>
 #include <OgreCameraMan.h>
+#include "Sinbad.h"
 
 
 
@@ -30,6 +31,7 @@ protected:
   OgreBites::CameraMan* mCamMgr = nullptr;
   OgreBites::CameraMan* reflexCam = nullptr;
   Ogre::SceneNode* mPlanoNode = nullptr;
+  Sinbad* sinbadObj;
 
 };
 

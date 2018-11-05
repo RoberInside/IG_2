@@ -2,10 +2,13 @@
 #include <iostream>
 
 //Constructora
-Sinbad::Sinbad(Ogre::SceneNode* oSN, Ogre::SceneNode* nBomb) {
+Sinbad::Sinbad(Ogre::SceneNode* oSN, Bomb* bObj, Ogre::SceneNode* nToy):
+	bomb(bObj), snToy(nToy)
+{
 	nSinbad = oSN;
-	nBomba = nBomb;
 	mSM = nSinbad->getCreator();
+	nBomba = mSM->getEntity("eBomb")->getParentSceneNode();
+	
 	createSinbad();
 
 	//ANIMACIONES
@@ -75,9 +78,19 @@ bool Sinbad::keyPressed(const OgreBites::KeyboardEvent & evt)
 
 void Sinbad::activarBomba() {
 	Ruta->setEnabled(false);
-	
+	bomb->smokeParticle();		// se activa el humo
+
+	eSinbad->detachObjectFromBone(eSword1);
+	eSinbad->detachObjectFromBone(eSword2);
+	eSinbad->attachObjectToBone("Handle.R", eSword1);
+	eSinbad->attachObjectToBone("Handle.L", eSword2);
+
+	//desaparece el toy
+	snToy->flipVisibility();
+
 	kabumAnim();
 }
+
 
 void Sinbad::switchAnimation() {
 	Dance->setEnabled(!Dance->getEnabled());
@@ -97,16 +110,22 @@ void Sinbad::switchAnimation() {
 		Ruta->setEnabled(true);
 	}
 
-	if (RunTop->getEnabled()) eSinbad->attachObjectToBone("Handle.R", eSword1);
+	if (Ruta->getEnabled()) eSinbad->attachObjectToBone("Handle.R", eSword1);
 }
 
 void Sinbad::frameRendered(const Ogre::FrameEvent& evt)
 {
-	if (Dance->getEnabled()) Dance->addTime(evt.timeSinceLastFrame);
+
+	if (actBum) {
+		if (Kabum->getEnabled()) {
+			Kabum->addTime(evt.timeSinceLastFrame);			
+		}
+	}
+	else if (Dance->getEnabled()) Dance->addTime(evt.timeSinceLastFrame);
+	else if (Ruta->getEnabled()) Ruta->addTime(evt.timeSinceLastFrame);
 	if (RunBase->getEnabled()) RunBase->addTime(evt.timeSinceLastFrame);
 	if (RunTop->getEnabled()) RunTop->addTime(evt.timeSinceLastFrame);
-	if (Ruta->getEnabled()) Ruta->addTime(evt.timeSinceLastFrame);
-	if (actBum) if (Kabum->getEnabled()) Kabum->addTime(evt.timeSinceLastFrame);
+
 }
 
 void Sinbad::andar() {
@@ -119,6 +138,7 @@ void Sinbad::andar() {
 	RunBase->setEnabled(true);
 	RunTop->setEnabled(true);
 	//Kabum->setEnabled(false);
+
 
 	//Animacion andar dando vueltas
 	//Animacion
@@ -215,6 +235,11 @@ void Sinbad::kabumAnim() {
 	//RunTop->setEnabled(true);
 	//Ruta->setEnabled(false);
 	//Kabum->setEnabled(true);
+		
+	
+	if (Dance->getEnabled()) Dance->setEnabled(false);
+	if (Ruta->getEnabled()) Ruta->setEnabled(false);
+
 
 	//////////////////////////
 	//	VARIABLES
@@ -224,10 +249,10 @@ void Sinbad::kabumAnim() {
 	Ogre::Real duracionBum = 10;
 	Ogre::Animation* animationBum = mSM->createAnimation("animKabum", duracionBum);
 	Ogre::NodeAnimationTrack* trackBum = animationBum->createNodeTrack(0); //incluir modulo animaciones
+	trackBum->setAssociatedNode(nSinbad);	//Esto es lo que nos desplaza al Sinbad
 	
 	//nSinbad->setPosition(); //¿Actualizar la posicion?
 
-	trackBum->setAssociatedNode(nSinbad);	//Esto es lo que nos desplaza al Sinbad
 	actBum = true;
 	Ogre::Vector3 keyframePosBum;
 	Ogre::Real longitudPasoBum = duracionBum / 4.2;
@@ -235,6 +260,8 @@ void Sinbad::kabumAnim() {
 	Ogre::TransformKeyFrame* kfBum;
 	int tamDesplazamientoYBum = 80;
 	int tamDesplazamientoXBum = 400;
+	// cargar el nodo de la bomba
+	
 
 	//GIROS
 	//Vector origen
@@ -246,7 +273,7 @@ void Sinbad::kabumAnim() {
 	Ogre::Vector3 dest2Bum(0, 1, 0);
 	//Generando Quaterniones
 	Ogre::Quaternion quat2Bum = srcBum.getRotationTo(dest2Bum);
-
+	quat2Bum.normalise();
 	////////////////////////
 	//KEYFRAMES
 	///////////////////////
@@ -273,6 +300,8 @@ void Sinbad::kabumAnim() {
 	keyframePosBum += destBum;
 	kfBum->setRotation(quatBum);
 	kfBum->setTranslate(keyframePosBum);
+
+
 
 	//Keyframe 4: Se tumba hacia arriba
 	kfBum = trackBum->createNodeKeyFrame(longitudPasoBum * 1.8);
