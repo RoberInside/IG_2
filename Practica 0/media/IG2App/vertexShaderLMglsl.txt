@@ -1,0 +1,21 @@
+#version 330 core
+
+//Atributos de los vértices a procesar
+
+//Datos recibidos (IN)
+in vec4 vertex;					//vertice
+in vec2 uv0;					//Coordenada de textura inicial
+uniform mat4 modelViewProjMat;	//Matriz de modelado
+
+//Lo que pasaremos al fragment Shader (OUT)
+out vec2 vUv0;					//Coordenada de textura inicial
+//out vec2 TexCoord1;	
+//out vec2 TexCoord2;
+//out vec4 vColor
+
+//Funcion
+void main(void) {
+	vUv0 = uv0;					//Inicializamos la variable que mandaremos al fragment a la coordenada de textura recibida
+	gl_Position = modelViewProjMat * vertex; //obligatorio
+	//vColor = vec4(1.0, 0.0, 0.0, 1.0);
+}
