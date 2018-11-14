@@ -1,26 +1,30 @@
 
+vertex_program vertexShadersLM glsl {
+	source vertexShaderLMglsl.txt 		//archivo del código
+	default_params 						//valores para las variables uniform
+	{
+		param_named_auto modelViewProjMat worldviewproj_matrix
+	}
+}
+
+fragment_program fragmentShadersLM glsl {
+	source fragmentShaderLMglsl.txt 	//archivo del código
+	default_params						//valores para las variables uniform
+	{
+		param_named textura1 int 0 		//unidad de textura
+		param_named textura2 int 1
+		param_named FB float 0.5
+		//param_named_auto FB time_0_1 10	//Si queremos usar los parametros time
+		param_named intLuz float 1.0
+	}
+}
+
 material ejemploShadersLM {
 	technique {
 		pass{
-			//vertex_program_ref
-			vertex_program vertexShadersLM glsl {
-				source vertexShaderLMglsl.txt 		//archivo del código
-				default_params 						//valores para las variables uniform
-				{
-					param_named_auto modelViewProjMat worldviewproj_matrix
-				}
+			vertex_program_ref vertexShadersLM glsl{
 			}
-
-			fragment_program fragmentShadersLM glsl {
-				source fragmentShaderLMglsl.txt 	//archivo del código
-				default_params						//valores para las variables uniform
-				{
-					param_named textura1 int 0 		//unidad de textura
-					param_named textura2 int 1
-					param_named FB float 0.5
-					//param_named_auto FB time_0_1 10	//Si queremos usar los parametros time
-					param_named intLuz float 1.0
-				}
+			fragment_program_ref fragmentShadersLM glsl{
 			}
 
 			texture_unit texture1 {
