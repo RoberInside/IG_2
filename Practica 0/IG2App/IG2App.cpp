@@ -256,6 +256,16 @@ void IG2App::setupScene(void)
   //mCamMgr->setYawPitchDist(Radian(0), Degree(30), 100);
 
   //------------------------------------------------------------------------
+  //SKYPLANE (PRACTICA 2)
+  //http://wiki.ogre3d.org/Basic+Tutorial+3#Sky
+  //mSM->setSkyBox(true, "\media\IG2App\ejemploShadersLM");
+  Ogre::Plane planoCielo;
+  planoCielo.d = 1000;										//Distancia de origen
+  planoCielo.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;		//orientación
+  mSM->setSkyPlane(true, planoCielo, "ejemploShadersLM", 1500, 50, true, 1.5, 150, 150);	//activo, plano, material, tamaño nxn, tiles, renderFirst, curvatura, segmentos curvatura x, segmentos curvatura y
+
+
+  //------------------------------------------------------------------------
 
 }
 
