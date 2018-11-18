@@ -4,6 +4,7 @@ vertex_program vertexShadersLM glsl {
 	default_params 						//valores para las variables uniform
 	{
 		param_named_auto modelViewProjMat worldviewproj_matrix
+		param_named_auto Tiempo sintime_0_1 50 	//Tiempo para el vertex shader 
 	}
 }
 
@@ -11,11 +12,12 @@ fragment_program fragmentShadersLM glsl {
 	source fragmentShaderLMglsl.txt 	//archivo del código
 	default_params						//valores para las variables uniform
 	{
-		param_named textura1 int 0 		//unidad de textura
-		param_named textura2 int 1
-		param_named FB float 0.5
-		//param_named_auto FB time_0_1 10	//Si queremos usar los parametros time
+		param_named textura1 int 1 		//unidad de textura (estaba mal, ponia 0 y uno y usabas 1 y 2)
+		param_named textura2 int 2
+		//param_named FB float 0.5
+		param_named_auto FB time_0_1 10	//Si queremos usar los parametros time
 		param_named intLuz float 1.0
+		
 	}
 }
 

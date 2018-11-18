@@ -49,7 +49,7 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 		//	break;
 
 		case SDLK_c:
-			mCamNode->lookAt(snSinbadNode->getPosition(), Ogre::Node::TS_LOCAL); // esto no funciona, pero se deberia poder hacer de este estilo.
+			mCamNode->lookAt(snSinbadNode->getPosition(), Ogre::Node::TS_LOCAL); 
 			break;
 	}
   /*

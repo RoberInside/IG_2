@@ -5,6 +5,7 @@
 in vec2 vUv0; 					//Recibido desde el vertex Shader: out vec2 vUv0
 //in vec4 gl_FragCoord 			//predefinida asociada a gl_Position (out del VS)
 //in vec4 vColor
+in vec2 vUv1;					//coordenadas para la primera textura y el desplazamiento horizontal
 
 //Lo que mandaremos a la grafica? (OUT)
 out vec4 fFragColor; 			//Valor de salida para cada pixel
@@ -18,7 +19,8 @@ uniform float intLuz;			//constantes del programa
 //Funcion
 void main(void) {
 	//fFragColor = vColor;		
-	vec3 color1 = vec3(texture(textura1, vUv0)) * intLuz;
+
+	vec3 color1 = vec3(texture(textura1, vUv1)) * intLuz; //coordenadas vUv1 modificadas para la practica
 	vec3 color2 = vec3(texture(textura2, vUv0));
 	vec3 color = mix(color1, color2, FB);			//formula (1-FB) * C1 + FB * C2
 	fFragColor = vec4(color, 1.0);
